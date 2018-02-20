@@ -8,6 +8,15 @@
 var fs = require('fs');
 var express = require('express');
 var app = express();
+var timestamp = require('unix-timestamp')
+
+console.log(timestamp.fromDate("January 2018"));
+console.log(timestamp.fromDate("January 1930"));
+console.log(timestamp.now());
+console.log(timestamp.toDate(9237856082));
+console.log(timestamp.fromDate("38 January 1930"));
+console.log(timestamp.toDate(-9237856082));
+// console.log(timestamp.duration("65465498494654"));
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -22,6 +31,8 @@ if (!process.env.DISABLE_XORIGIN) {
   });
 }
 
+// is this working
+
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.route('/_api/package.json')
@@ -33,9 +44,45 @@ app.route('/_api/package.json')
     });
   });
 
+
+// app.route('/${str}')
+  //   .get(function(req, res) {
+  //     res.send({
+  //       hello: "world"
+  //     })
+  //   });
+
+app.route('/*')
+  .get(function(req, res) {
+    if (req.path == '/') {
+      res.sendFile(process.cwd() + '/views/index.html');
+    } else {
+      let path = req.path;
+      if (path.charAt(0) == '/')
+        path = path.substr(1);
+      console.log("path", path);
+
+      if (path) {
+      }
+      res.send({
+        name: "hello world"
+      });
+    }
+  });
+
 app.route('/')
   .get(function(req, res) {
-    res.sendFile(process.cwd() + '/views/index.html');
+
+    console.log(req.path)
+
+
+    if (req.path == '/') {
+      res.sendFile(process.cwd() + '/views/index.html');
+    } else {
+      res.send({
+        name: "hello world"
+      });
+    }
   })
 
 // Respond not found to all the wrong routes
@@ -53,8 +100,9 @@ app.use(function(err, req, res, next) {
   }
 })
 
-// set PORT to process.env.PORT
-app.listen(process.env.PORT, function() {
+// use below for Herokou deployment
+// app.listen(process.env.PORT, function() {
+app.listen(5000, function() {
   console.log('Node.js listening ...');
 });
 
