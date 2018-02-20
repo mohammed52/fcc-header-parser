@@ -5,7 +5,8 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"postinstall": "npm run build"
 	},
 	"engines": {
 		"node": "4.4.5"
