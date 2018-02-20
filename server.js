@@ -54,7 +54,7 @@ app.use(function(err, req, res, next) {
 })
 
 // set PORT to process.env.PORT
-app.listen(5000, function() {
+app.listen(process.env.PORT, function() {
   console.log('Node.js listening ...');
 });
 
