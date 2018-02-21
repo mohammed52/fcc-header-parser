@@ -46,23 +46,9 @@ app.route('/_api/package.json')
     });
   });
 
-
-// app.route('/${str}')
-  //   .get(function(req, res) {
-  //     res.send({
-  //       hello: "world"
-  //     })
-  //   });
-
 function isInteger(x) {
   console.log("checking...");
   return (x % 1 === 0);
-}
-
-if (isInteger('true')) {
-  console.log("isInteger");
-} else {
-  console.log("not an integer")
 }
 
 console.log("parsing int");
@@ -71,14 +57,16 @@ console.log(parseInt("iauwiowef"));
 
 function getReturnObject(path) {
   console.log("parseInt(path)", parseInt(path));
-  if (isNaN(parseInt(path))) {
-    // is Not a unix number, process as readable date
-    console.log("timestamp.fromDate(path)", timestamp.fromDate(path));;
-    if (isNaN(timestamp.fromDate(path))) {
-      // can get the unix timestamp integer from path
+  if (path.match(/[a-z]/i)) {
+    console.log("contains text");
+
+    if (timestamp.fromDate(path)) {
+      // console.log("date found");
+      // console.log("timestamp.fromDate(path)", timestamp.fromDate(path));
+      const tmpUnixDate = timestamp.fromDate(path);
       return {
-        "unix": timestamp.fromDate(path),
-        "natural": path
+        "unix": tmpUnixDate,
+        "natural": moment(timestamp.toDate(parseInt(tmpUnixDate))).format('MMMM Do YYYY')
       }
     } else {
       // no unix timestamp possible, return null
@@ -86,13 +74,27 @@ function getReturnObject(path) {
         "unix": null,
         "natural": null
       }
-
     }
   } else {
-    // input is a unix timestamp number, return date
-    return {
-      "unix": path,
-      natural: moment(timestamp.toDate(parseInt(path))).format('MMMM Do YYYY')
+    if (!isNaN(parseInt(path))) {
+      // can get the unix timestamp integer from path
+      console.log(console.log("path is a number"));
+      console.log("path", path);
+      const tmpPathInInt = parseInt(path);
+      console.log("tmpPathInInt", tmpPathInInt)
+      // console.log(tmpPathInInt);
+      // const tmpTimeStamp = timestamp.fromDate(tmpPathInInt);
+      console.log("... returning object");
+      return {
+        "unix": path,
+        "natural": moment(timestamp.toDate(tmpPathInInt)).format('MMMM Do YYYY')
+      }
+    } else {
+      // no unix timestamp possible, return null
+      return {
+        "unix": null,
+        "natural": null
+      }
     }
   }
 }
@@ -105,7 +107,7 @@ app.route('/*')
       let path = req.path;
       if (path.charAt(0) == '/')
         path = path.substr(1);
-      console.log("path", path);
+      // console.log("path", path);
       res.send(getReturnObject(decodeURI(path)));
     }
   });
