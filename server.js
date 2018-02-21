@@ -70,8 +70,10 @@ console.log(parseInt("iauwiowef"));
 
 
 function getReturnObject(path) {
+  console.log("parseInt(path)", parseInt(path));
   if (isNaN(parseInt(path))) {
     // is Not a unix number, process as readable date
+    console.log("timestamp.fromDate(path)", timestamp.fromDate(path));;
     if (isNaN(timestamp.fromDate(path))) {
       // can get the unix timestamp integer from path
       return {
@@ -104,7 +106,7 @@ app.route('/*')
       if (path.charAt(0) == '/')
         path = path.substr(1);
       console.log("path", path);
-      res.send(getReturnObject(path));
+      res.send(getReturnObject(decodeURI(path)));
     }
   });
 
