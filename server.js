@@ -9,6 +9,7 @@ var fs = require('fs');
 var express = require('express');
 var app = express();
 var timestamp = require('unix-timestamp')
+var moment = require('moment')
 // var reload = require('reload')
 
 console.log(timestamp.fromDate("January 2018"));
@@ -64,6 +65,35 @@ if (isInteger('true')) {
   console.log("not an integer")
 }
 
+console.log("parsing int");
+console.log(parseInt("iauwiowef"));
+
+
+function getReturnObject(path) {
+  if (isNaN(parseInt(path))) {
+    // is Not a unix number, process as readable date
+    if (isNaN(timestamp.fromDate(path))) {
+      // can get the unix timestamp integer from path
+      return {
+        "unix": timestamp.fromDate(path),
+        "natural": path
+      }
+    } else {
+      // no unix timestamp possible, return null
+      return {
+        "unix": null,
+        "natural": null
+      }
+
+    }
+  } else {
+    // input is a unix timestamp number, return date
+    return {
+      "unix": path,
+      natural: moment(timestamp.toDate(parseInt(path))).format('MMMM Do YYYY')
+    }
+  }
+}
 
 app.route('/*')
   .get(function(req, res) {
@@ -74,12 +104,7 @@ app.route('/*')
       if (path.charAt(0) == '/')
         path = path.substr(1);
       console.log("path", path);
-
-      if (path) {
-      }
-      res.send({
-        name: "hello world"
-      });
+      res.send(getReturnObject(path));
     }
   });
 
