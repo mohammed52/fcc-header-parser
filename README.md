@@ -1,3 +1,3 @@
 FCC Timestamp challenge
 
-to see in action, visit http://fcc-timestamp1.herokuapp.com/
+#### Demo site: [**http://fcc-timestamp1.herokuapp.com/**](http://fcc-timestamp1.herokuapp.com/)
