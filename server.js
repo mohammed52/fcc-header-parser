@@ -9,6 +9,7 @@ var fs = require('fs');
 var express = require('express');
 var app = express();
 var timestamp = require('unix-timestamp')
+// var reload = require('reload')
 
 console.log(timestamp.fromDate("January 2018"));
 console.log(timestamp.fromDate("January 1930"));
@@ -51,6 +52,18 @@ app.route('/_api/package.json')
   //       hello: "world"
   //     })
   //   });
+
+function isInteger(x) {
+  console.log("checking...");
+  return (x % 1 === 0);
+}
+
+if (isInteger('true')) {
+  console.log("isInteger");
+} else {
+  console.log("not an integer")
+}
+
 
 app.route('/*')
   .get(function(req, res) {
@@ -100,9 +113,8 @@ app.use(function(err, req, res, next) {
   }
 })
 
-// use below for Herokou deployment
-// app.listen(process.env.PORT, function() {
-app.listen(5000, function() {
+// reload(app);
+app.listen(process.env.PORT || 5000, function() {
   console.log('Node.js listening ...');
 });
 
