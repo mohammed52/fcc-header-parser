@@ -1,3 +1,3 @@
-FCC Timestamp challenge
+FCC Request Header Parser Microservice
 
-#### Demo site: [**http://fcc-timestamp1.herokuapp.com/**](http://fcc-timestamp1.herokuapp.com/)
+#### Demo site: [**https://fcc-header-parser1.herokuapp.com/**](https://fcc-header-parser1.herokuapp.com/)
