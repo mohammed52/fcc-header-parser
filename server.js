@@ -11,6 +11,7 @@ var app = express();
 var timestamp = require('unix-timestamp')
 var moment = require('moment')
 // var reload = require('reload')
+var useragent = require('useragent');
 
 console.log(timestamp.fromDate("January 2018"));
 console.log(timestamp.fromDate("January 1930"));
@@ -46,80 +47,31 @@ app.route('/_api/package.json')
     });
   });
 
-function isInteger(x) {
-  console.log("checking...");
-  return (x % 1 === 0);
-}
 
-console.log("parsing int");
-console.log(parseInt("iauwiowef"));
-
-
-function getReturnObject(path) {
-  console.log("parseInt(path)", parseInt(path));
-  if (path.match(/[a-z]/i)) {
-    console.log("contains text");
-
-    if (timestamp.fromDate(path)) {
-      // console.log("date found");
-      // console.log("timestamp.fromDate(path)", timestamp.fromDate(path));
-      const tmpUnixDate = timestamp.fromDate(path);
-      return {
-        "unix": tmpUnixDate,
-        "natural": moment(timestamp.toDate(parseInt(tmpUnixDate))).format('MMMM Do YYYY')
-      }
-    } else {
-      // no unix timestamp possible, return null
-      return {
-        "unix": null,
-        "natural": null
-      }
-    }
-  } else {
-    if (!isNaN(parseInt(path))) {
-      // can get the unix timestamp integer from path
-      console.log(console.log("path is a number"));
-      console.log("path", path);
-      const tmpPathInInt = parseInt(path);
-      console.log("tmpPathInInt", tmpPathInInt)
-      // console.log(tmpPathInInt);
-      // const tmpTimeStamp = timestamp.fromDate(tmpPathInInt);
-      console.log("... returning object");
-      return {
-        "unix": path,
-        "natural": moment(timestamp.toDate(tmpPathInInt)).format('MMMM Do YYYY')
-      }
-    } else {
-      // no unix timestamp possible, return null
-      return {
-        "unix": null,
-        "natural": null
-      }
-    }
-  }
-}
-
-app.route('/*')
-  .get(function(req, res) {
-    if (req.path == '/') {
-      res.sendFile(process.cwd() + '/views/index.html');
-    } else {
-      let path = req.path;
-      if (path.charAt(0) == '/')
-        path = path.substr(1);
-      // console.log("path", path);
-      res.send(getReturnObject(decodeURI(path)));
-    }
-  });
 
 app.route('/')
   .get(function(req, res) {
 
-    console.log(req.path)
-
+    // console.log(req)
 
     if (req.path == '/') {
-      res.sendFile(process.cwd() + '/views/index.html');
+      // res.sendFile(process.cwd() + '/views/index.html');
+      let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      console.log("ip", ip);
+      let language = req.headers["accept-language"];
+      console.log("language", language);
+
+      let userAgent = req.headers['user-agent'];
+      console.log("userAgent", userAgent);
+
+      var agent = useragent.parse(req.headers['user-agent']);
+      console.log(agent.os.toString());
+
+      res.send({
+        "ipaddress": ip,
+        "language": language,
+        "software": agent.os.toString()
+      })
     } else {
       res.send({
         name: "hello world"
